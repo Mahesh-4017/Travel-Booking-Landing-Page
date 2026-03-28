@@ -1,0 +1,10 @@
+.body{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+.header{
+    background-color: rgb(61, 61, 250); 
+    position: relative;
+}

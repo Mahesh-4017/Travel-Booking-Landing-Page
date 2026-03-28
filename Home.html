@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Booking.com — Find Your Stay</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0A1628;
+    --cream: #F5F0E8;
+    --gold: #C8A96E;
+    --coral: #E8704A;
+    --sky: #003580;
+    --mist: #E8EDF5;
+    --white: #FFFFFF;
+    --text-dark: #1A1A2E;
+    --text-mid: #5A6070;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(10,22,40,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200,169,110,0.2);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: 0.5px;
+  }
+  .nav-logo span { color: var(--gold); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    list-style: none;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--navy) !important;
+    font-weight: 500 !important;
+    padding: 9px 22px;
+    border-radius: 4px;
+    transition: background 0.2s, transform 0.2s !important;
+  }
+  .nav-cta:hover { background: #d9bc85 !important; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: var(--navy);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 50%, rgba(0,53,128,0.6) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 20% 80%, rgba(200,169,110,0.15) 0%, transparent 60%),
+      url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600&auto=format&fit=crop&q=80') center/cover no-repeat;
+    opacity: 0.55;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, rgba(10,22,40,0.85) 40%, rgba(10,22,40,0.3) 100%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 48px;
+    max-width: 680px;
+    animation: fadeUp 0.9s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(200,169,110,0.4);
+    padding: 6px 14px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.9s 0.1s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 6vw, 80px);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 20px;
+    animation: fadeUp 0.9s 0.2s ease both;
+  }
+  .hero h1 em { color: var(--gold); font-style: italic; }
+
+  .hero p {
+    font-size: 17px;
+    color: rgba(255,255,255,0.68);
+    line-height: 1.65;
+    margin-bottom: 40px;
+    max-width: 460px;
+    font-weight: 300;
+    animation: fadeUp 0.9s 0.3s ease both;
+  }
+
+  /* ── SEARCH BOX ── */
+  .search-box {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 6px 6px 6px 6px;
+    display: flex;
+    gap: 4px;
+    align-items: stretch;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+    animation: fadeUp 0.9s 0.4s ease both;
+  }
+
+  .search-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 16px;
+    border-right: 1px solid #eee;
+    min-width: 0;
+  }
+  .search-field:last-of-type { border-right: none; }
+
+  .search-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-mid);
+    margin-bottom: 3px;
+  }
+
+  .search-field input {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dark);
+    background: transparent;
+    font-weight: 500;
+  }
+  .search-field input::placeholder { color: #bbb; font-weight: 400; }
+
+  .search-btn {
+    background: var(--coral);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0 28px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .search-btn:hover { background: #d9623d; transform: translateY(-1px); }
+
+  /* ── STATS ROW ── */
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 36px;
+    animation: fadeUp 0.9s 0.5s ease both;
+  }
+  .stat-item { }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .stat-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.3px;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 36px;
+  }
+  .section-eyebrow {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--coral);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 3.5vw, 40px);
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.15;
+  }
+  .section-title em { font-style: italic; color: var(--sky); }
+  .section-link {
+    font-size: 13px;
+    color: var(--sky);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(0,53,128,0.3);
+    padding-bottom: 1px;
+    transition: border-color 0.2s;
+    white-space: nowrap;
+  }
+  .section-link:hover { border-color: var(--sky); }
+
+  /* ── PROPERTY TYPE CARDS ── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+  .section { padding: 90px 0; }
+
+  .property-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .property-card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 3/4;
+    cursor: pointer;
+    group: true;
+  }
+  .property-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(10,22,40,0.85) 100%);
+    z-index: 1;
+    transition: opacity 0.3s;
+  }
+  .property-card:hover::before { opacity: 0.7; }
+
+  .property-card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+    display: block;
+  }
+  .property-card:hover img { transform: scale(1.07); }
+
+  .property-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 20px;
+    z-index: 2;
+  }
+  .property-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 4px;
+  }
+  .property-count {
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.3px;
+  }
+
+  .property-tag {
+    position: absolute;
+    top: 16px; left: 16px;
+    z-index: 2;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  /* ── DESTINATION GRID ── */
+  .dest-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    grid-template-rows: 280px 280px;
+    gap: 16px;
+  }
+
+  .dest-card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .dest-card.tall { grid-row: span 2; }
+  .dest-card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .dest-card:hover img { transform: scale(1.06); }
+  .dest-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 30%, rgba(10,22,40,0.8) 100%);
+    z-index: 1;
+  }
+  .dest-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 24px;
+    z-index: 2;
+  }
+  .dest-city {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 4px;
+  }
+  .dest-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+  }
+  .dest-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: inline-block;
+  }
+
+  /* ── WHY SECTION ── */
+  .why-section {
+    background: var(--navy);
+    padding: 90px 0;
+  }
+  .why-section .section-eyebrow { color: var(--gold); }
+  .why-section .section-title { color: var(--white); }
+  .why-section .section-title em { color: var(--gold); }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    margin-top: 52px;
+  }
+
+  .why-card {
+    padding: 32px 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.04);
+    transition: border-color 0.3s, background 0.3s, transform 0.3s;
+  }
+  .why-card:hover {
+    border-color: rgba(200,169,110,0.4);
+    background: rgba(200,169,110,0.06);
+    transform: translateY(-4px);
+  }
+
+  .why-icon {
+    font-size: 28px;
+    margin-bottom: 18px;
+    display: block;
+  }
+  .why-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  .why-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* ── OFFERS BANNER ── */
+  .offer-banner {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 56px 60px;
+    background: linear-gradient(120deg, #0A2744 0%, #003580 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .offer-banner::before {
+    content: '';
+    position: absolute;
+    right: -40px; top: -40px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(200,169,110,0.12);
+    pointer-events: none;
+  }
+  .offer-banner::after {
+    content: '';
+    position: absolute;
+    left: 200px; bottom: -80px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(232,112,74,0.1);
+    pointer-events: none;
+  }
+
+  .offer-text { position: relative; z-index: 1; }
+  .offer-tag {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 2px;
+    margin-bottom: 18px;
+  }
+  .offer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 900;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .offer-title em { font-style: italic; color: var(--gold); }
+  .offer-desc {
+    font-size: 15px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 300;
+    max-width: 400px;
+  }
+
+  .offer-btn {
+    position: relative; z-index: 1;
+    flex-shrink: 0;
+    display: inline-block;
+    background: var(--coral);
+    color: white;
+    text-decoration: none;
+    padding: 16px 36px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.2s;
+    white-space: nowrap;
+  }
+  .offer-btn:hover { background: #d9623d; transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #07101F;
+    padding: 60px 0 32px;
+    border-top: 1px solid rgba(200,169,110,0.15);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 48px;
+  }
+  .footer-brand .nav-logo { font-size: 24px; display: block; margin-bottom: 16px; }
+  .footer-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 280px;
+  }
+  .footer-col-title {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 10px; }
+  .footer-links a {
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    font-weight: 300;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: rgba(255,255,255,0.8); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero-content { padding: 0 24px; }
+    .search-box { flex-direction: column; }
+    .search-field { border-right: none; border-bottom: 1px solid #eee; }
+    .search-btn { padding: 14px; border-radius: 5px; }
+    .container { padding: 0 24px; }
+    .property-grid { grid-template-columns: repeat(2, 1fr); }
+    .dest-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .dest-card.tall { grid-row: span 1; height: 260px; }
+    .dest-card { height: 200px; }
+    .why-grid { grid-template-columns: repeat(2, 1fr); }
+    .offer-banner { flex-direction: column; padding: 40px 28px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Booking<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#">Stays</a></li>
+    <li><a href="#">Flights</a></li>
+    <li><a href="#">Car Rental</a></li>
+    <li><a href="#">Attractions</a></li>
+    <li><a href="#">List Your Property</a></li>
+    <li><a href="#" class="nav-cta">Sign In</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-tag">✦ Curated Travel Experiences</span>
+    <h1>Find your<br><em>perfect stay</em><br>anywhere.</h1>
+    <p>Over 2 million properties worldwide — from boutique villas to city icons. Your next journey starts here.</p>
+
+    <div class="search-box">
+      <div class="search-field">
+        <span class="search-label">Destination</span>
+        <input type="text" placeholder="Where are you going?">
+      </div>
+      <div class="search-field">
+        <span class="search-label">Check In</span>
+        <input type="text" placeholder="Add dates">
+      </div>
+      <div class="search-field">
+        <span class="search-label">Check Out</span>
+        <input type="text" placeholder="Add dates">
+      </div>
+      <div class="search-field">
+        <span class="search-label">Guests</span>
+        <input type="text" placeholder="2 adults · 1 room">
+      </div>
+      <button class="search-btn">Search</button>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">2M+</div>
+        <div class="stat-label">Properties listed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">220+</div>
+        <div class="stat-label">Countries covered</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">300M</div>
+        <div class="stat-label">Verified reviews</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROPERTY TYPES -->
+<section class="section" style="background: var(--white);">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <p class="section-eyebrow">Browse</p>
+        <h2 class="section-title">Stay your <em>way</em></h2>
+      </div>
+      <a href="#" class="section-link">View all types →</a>
+    </div>
+    <div class="property-grid">
+      <div class="property-card">
+        <span class="property-tag">Popular</span>
+        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&auto=format&fit=crop&q=80" alt="Hotel">
+        <div class="property-info">
+          <div class="property-name">Hotels</div>
+          <div class="property-count">1.2M+ properties</div>
+        </div>
+      </div>
+      <div class="property-card">
+        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&auto=format&fit=crop&q=80" alt="Villa">
+        <div class="property-info">
+          <div class="property-name">Villas</div>
+          <div class="property-count">380K+ properties</div>
+        </div>
+      </div>
+      <div class="property-card">
+        <span class="property-tag">Trending</span>
+        <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=400&auto=format&fit=crop&q=80" alt="Apartments">
+        <div class="property-info">
+          <div class="property-name">Apartments</div>
+          <div class="property-count">540K+ properties</div>
+        </div>
+      </div>
+      <div class="property-card">
+        <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=400&auto=format&fit=crop&q=80" alt="Resorts">
+        <div class="property-info">
+          <div class="property-name">Resorts</div>
+          <div class="property-count">90K+ properties</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRENDING DESTINATIONS -->
+<section class="section" style="background: var(--cream);">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <p class="section-eyebrow">Discover</p>
+        <h2 class="section-title">Trending <em>destinations</em></h2>
+      </div>
+      <a href="#" class="section-link">Explore all cities →</a>
+    </div>
+    <div class="dest-grid">
+      <div class="dest-card tall">
+        <img src="https://images.unsplash.com/photo-1587474260584-136574528ed5?w=700&auto=format&fit=crop&q=80" alt="New Delhi" style="height:100%;">
+        <div class="dest-info">
+          <div class="dest-city">New Delhi</div>
+          <div class="dest-meta">
+            <span>India</span><span class="dest-dot"></span>
+            <span>1,240 properties</span>
+          </div>
+        </div>
+      </div>
+      <div class="dest-card">
+        <img src="https://images.unsplash.com/photo-1529253355930-ddbe423a2ac7?w=600&auto=format&fit=crop&q=80" alt="Mumbai" style="height:100%;">
+        <div class="dest-info">
+          <div class="dest-city">Mumbai</div>
+          <div class="dest-meta">
+            <span>India</span><span class="dest-dot"></span><span>2,100 properties</span>
+          </div>
+        </div>
+      </div>
+      <div class="dest-card">
+        <img src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=600&auto=format&fit=crop&q=80" alt="Bangalore" style="height:100%;">
+        <div class="dest-info">
+          <div class="dest-city">Bangalore</div>
+          <div class="dest-meta">
+            <span>India</span><span class="dest-dot"></span><span>870 properties</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER BANNER -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="offer-banner">
+      <div class="offer-text">
+        <span class="offer-tag">✦ Limited Time</span>
+        <div class="offer-title">Late Escape<br><em>Deals</em></div>
+        <p class="offer-desc">Save at least 15% on handpicked stays this season. Don't let the good times slip away.</p>
+      </div>
+      <a href="#" class="offer-btn">Find Deals Now →</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY BOOKING -->
+<section class="why-section">
+  <div class="container">
+    <div class="section-header" style="align-items:flex-end;">
+      <div>
+        <p class="section-eyebrow">Why us</p>
+        <h2 class="section-title" style="color:var(--white);">Why <em>Booking?</em></h2>
+      </div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <span class="why-icon">🔓</span>
+        <div class="why-title">Free Cancellation</div>
+        <p class="why-desc">Book now, pay later. Most rooms offer flexible cancellation — no stress, just freedom.</p>
+      </div>
+      <div class="why-card">
+        <span class="why-icon">⭐</span>
+        <div class="why-title">Verified Reviews</div>
+        <p class="why-desc">300M+ genuine reviews from real travelers. Make confident decisions every time.</p>
+      </div>
+      <div class="why-card">
+        <span class="why-icon">🌍</span>
+        <div class="why-title">Global Reach</div>
+        <p class="why-desc">From countryside cottages to city towers — 2M+ properties across 220+ countries.</p>
+      </div>
+      <div class="why-card">
+        <span class="why-icon">💬</span>
+        <div class="why-title">24/7 Support</div>
+        <p class="why-desc">Round-the-clock human support in over 40 languages. We're always here when you need us.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="nav-logo">Booking<span>.</span></span>
+        <p class="footer-desc">The world's leading platform for finding and booking the perfect accommodation. Travel smarter, stay better.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Explore</div>
+        <ul class="footer-links">
+          <li><a href="#">Hotels</a></li>
+          <li><a href="#">Apartments</a></li>
+          <li><a href="#">Resorts</a></li>
+          <li><a href="#">Villas</a></li>
+          <li><a href="#">Hostels</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Support</div>
+        <ul class="footer-links">
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Cancellation</a></li>
+          <li><a href="#">Trust & Safety</a></li>
+          <li><a href="#">Accessibility</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Investor Relations</a></li>
+          <li><a href="#">Sustainability</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Booking.com — All rights reserved.</span>
+      <span>Privacy · Terms · Cookie settings</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
